@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  labels:
+    app: LABEL_OF_DEPLOYMENT_NAME
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: LABEL_OF_POD_NAME
+  template:
+    metadata:
+      labels:
+        app: LABEL_OF_POD_NAME
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          image: YOUR_DOCKERHUB_IMAGE
+          ports:
+            - name: YOUR_PORT_NAME
+              containerPort: YOUR_PORT
+      initContainers:
+        - name: YOUR_INIT_CONTAINER_NAME
+          image: YOUR_INIT_CONTAINER_IMAGE
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup YOUR_DB_SERVICE_NAME.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for YOUR_DB_SERVICE_NAME; sleep 2; done",
+            ]
+        - name: YOUR_INIT_CONTAINER_NAME
+          image: YOUR_INIT_CONTAINER_IMAGE
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup YOUR_RMQ_SERVICE_NAME.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for YOUR_RMQ_SERVICE_NAME; sleep 2; done",
+            ]

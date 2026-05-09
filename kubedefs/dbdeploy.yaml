@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  labels:
+    app: YOUR_DEPLOYMENT_NAME
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: YOUR_LABEL_OF_POD_NAME
+  template:
+    metadata:
+      labels:
+        app: LABEL_OF_POD_NAME
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          image: YOUR_DOCKERHUB_IMAGE
+          volumeMounts:
+            - mountPath: YOUR_MOUNT_PATH
+              name: YOUR_VOLUME_NAME
+          ports:
+            - name: YOUR_PORT_NAME
+              containerPort: YOUR_PORT
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: YOUR_SECRET_NAME
+                  key: YOUR_SECRET_KEY
+      volumes:
+        - name: YOUR_VOLUME_NAME
+          persistentVolumeClaim:
+            claimName: YOUR_PVC_NAME
+
+      initContainers:
+        - name: YOUR_INIT_CONTAINER_NAME
+          image: YOUR_INIT_CONTAINER_IMAGE
+          args: ["rm", "-rf", "YOUR_MOUNT_PATH"]
+          volumeMounts:
+            - name: YOUR_VOLUME_NAME
+              mountPath: YOUR_MOUNT_PATH

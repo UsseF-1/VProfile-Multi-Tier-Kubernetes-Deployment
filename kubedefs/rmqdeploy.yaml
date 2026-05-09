@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  labels:
+    app: YOUR_DEPLOYMENT_NAME
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: YOUR_LABEL_OF_POD_NAME
+  template:
+    metadata:
+      labels:
+        app: YOUR_LABEL_OF_POD_NAME
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          image: YOUR_DOCKERHUB_IMAGE
+          ports:
+            - containerPort: YOUR_PORT
+              name: YOUR_PORT_NAME
+          env:
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: YOUR_SECRET_NAME
+                  key: YOUR_SECRET_KEY
+            - name: RABBITMQ_DEFAULT_USER
+              value: "YOUR_USERNAME"
